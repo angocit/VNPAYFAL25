@@ -73,6 +73,7 @@ const Cart = () => {
       { data: selectProduct, amount: Amount(selectProduct) }
     );
     window.location.href = data;
+    localStorage.setItem("paymentUrl", data);
   };
   const Amount = (arrProduct: any) => {
     return arrProduct.reduce(

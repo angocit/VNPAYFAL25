@@ -8,6 +8,7 @@ const CheckPayment = () => {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [orderCode, setOrderCode] = useState("");
+  const [paymentUrl, setPaymentUrl] = useState("");
 
   useEffect(() => {
     console.log(params.toString());
@@ -25,6 +26,7 @@ const CheckPayment = () => {
             "Cảm ơn bạn đã thanh toán. Đơn hàng của bạn đã được xử lý thành công."
           );
           setOrderCode(data.Order || "N/A");
+          localStorage.setItem("paymentUrl", "");
         } else {
           setStatus("error");
           setTitle("Thanh toán thất bại");
@@ -32,6 +34,9 @@ const CheckPayment = () => {
             "Có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại."
           );
           setOrderCode(data.Order || "N/A");
+          const paymentUrl = localStorage.getItem("paymentUrl");
+          if (!paymentUrl) return;
+          setPaymentUrl(paymentUrl);
         }
       } catch (error) {
         console.error("Error checking payment:", error);
@@ -42,6 +47,10 @@ const CheckPayment = () => {
     };
     checkPaymentStatus();
   });
+  const handleRetryPayment = () => {
+    if (!paymentUrl) return;
+    window.location.href = paymentUrl;
+  };
   return (
     <div className="flex items-center justify-center p-4">
       <div className="max-w-lg w-full bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -106,6 +115,14 @@ const CheckPayment = () => {
                   {orderCode}
                 </span>
               </div>
+            )}
+            {paymentUrl && (
+              <button
+                onClick={handleRetryPayment}
+                className={`mt-2 w-full font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform bg-blue-500 hover:bg-blue-600 text-white hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg`}
+              >
+                Thanh toán lại ngay
+              </button>
             )}
           </div>
         </div>

@@ -1,0 +1,5 @@
+
+.minwidth300{
+    min-width: 300px!important;
+    max-width: unset!important;
+}
